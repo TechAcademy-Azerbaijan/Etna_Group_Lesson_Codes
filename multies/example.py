@@ -21,6 +21,12 @@ with concurrent.futures.ProcessPoolExecutor() as executor:
 
 t2 = time.perf_counter()
 
+import random
+
+x = [random.randint(0, 100) for x in range(100)]
+
+print(x)
+
 dt = t2 - t1
 
 print(f'Finished {dt} second')
