@@ -1,0 +1,12 @@
+for _ in range(100):
+    thread = threading.Thread(target=do_something, args=[1.5])
+    thread.start()
+    threads.append(thread)
+
+for t in threads:
+    t.join()
+
+
+do_something()
+do_something()
+do_something()
