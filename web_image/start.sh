@@ -1,0 +1,1 @@
+docker run -d --name web_project  -p "5050:5000" web_image:v2.0
