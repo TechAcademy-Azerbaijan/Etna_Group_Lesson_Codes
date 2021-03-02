@@ -1,0 +1,16 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+    {% if user_info %}
+    <h1>About me:</h1>
+    <h3>My Name is {{ user_info.full_name }} and my id is {{ user_info.id }} </h3>
+    <p>Lorem ipsum dolor sit amet consectetur, adipisicing elit. Fugiat beatae ipsam animi voluptatibus totam qui voluptatem explicabo laboriosam reiciendis, officiis amet earum. Dicta molestiae mollitia dolores dolorem voluptate ad facere!</p>
+    {% for item in my_list %}
+        <li>{{item}}</li>
+    {% endfor %}
+    {% else %}
+    <h4>User not Found</h4>
+    {% endif %}
+
+{% endblock %}
