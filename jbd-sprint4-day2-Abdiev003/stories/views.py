@@ -1,16 +1,13 @@
 from django.shortcuts import render
 
+from stories.models import Recipe
+
 
 def HomePage(request):
-    category = ["Food", "Restaurant", "Dessert", "Lifestyle", "Recipes"]
-    context = {
-        "categories": category,
-    }
-    return render(request, "index.html", context)
+    return render(request, "index.html")
 
 
 def AboutPage(request):
-    category = ["Food", "Restaurant", "Dessert", "Lifestyle", "Recipes"]
     context = {
         "title": "About Stories",
         "description": "Far far away, behind the word mountains, far from the countries Vokalia and Consonantia",
@@ -18,30 +15,25 @@ def AboutPage(request):
         "stories": 200,
         "recipes": 300,
         "user": 40,
-        "categories": category,
     }
     return render(request, "about.html", context)
 
 
 def StoriesPage(request):
-    category = ["Food", "Restaurant", "Dessert", "Lifestyle", "Recipes"]
-    context = {
-        "categories": category,
-    }
-    return render(request, "strories.html", context)
+    return render(request, "strories.html",)
 
 
 def RecipesPage(request):
-    category = ["Food", "Restaurant", "Dessert", "Lifestyle", "Recipes"]
+    recipes = Recipe.objects.filter(is_published=True)
+    arr = ['idris', 'emrah', 'eli']
+    welcome_msg = '<h1>Welcome</h1>'
     context = {
-        "categories": category,
+        'recipe_list': recipes,
+        'welcome_msg': welcome_msg,
+        'arr': arr
     }
     return render(request, "recipes.html", context)
 
 
 def ContactPage(request):
-    category = ["Food", "Restaurant", "Dessert", "Lifestyle", "Recipes"]
-    context = {
-        "categories": category,
-    }
-    return render(request, "contact.html", context)
+    return render(request, "contact.html")

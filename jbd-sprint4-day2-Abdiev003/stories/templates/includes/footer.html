@@ -1,3 +1,4 @@
+{% load custom_tags %}
 <footer class="ftco-footer ftco-footer-2 ftco-section">
     <div class="container">
         <div class="row mb-5">
@@ -29,7 +30,8 @@
                 <div class="ftco-footer-widget mb-4">
                     <h2 class="ftco-heading-2">Categories</h2>
                     <ul class="list-unstyled">
-                        {% for category in categories %}
+                        {% get_categories True as published_categories %}
+                        {% for category in published_categories %}
                             <li><a href="#" class="py-2 d-block">{{category}}</a></li>
                         {% endfor %}
                     </ul>
