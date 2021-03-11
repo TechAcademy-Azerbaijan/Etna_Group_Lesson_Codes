@@ -1,5 +1,7 @@
-from django.shortcuts import render
+from django.shortcuts import render, redirect
+from django.contrib import messages
 
+from stories.forms import ContactForm
 from stories.models import Recipe
 
 
@@ -36,4 +38,14 @@ def RecipesPage(request):
 
 
 def ContactPage(request):
-    return render(request, "contact.html")
+    form = ContactForm()
+    if request.method == 'POST':
+        form = ContactForm(data=request.POST)
+        if form.is_valid():
+            form.save()
+            messages.success(request, 'Sizin muracietiniz qebul edildi.')
+            return redirect('/recipes/')
+    context = {
+        'form': form
+    }
+    return render(request, "contact.html", context)
