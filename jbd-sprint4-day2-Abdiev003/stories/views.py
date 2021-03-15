@@ -1,5 +1,7 @@
+from django.http import HttpResponse
 from django.shortcuts import render, redirect
 from django.contrib import messages
+from django.template.loader import render_to_string
 
 from stories.forms import ContactForm
 from stories.models import Recipe
@@ -49,3 +51,28 @@ def ContactPage(request):
         'form': form
     }
     return render(request, "contact.html", context)
+
+
+def like_recipe(request):
+    if request.method == 'POST':
+        liked_recipes = request.COOKIES.get('liked_recipes', '')
+        recipe_id = request.POST.get('recipe_id')
+
+        html = render_to_string('successfully_added.html')
+        response = HttpResponse(html)
+        if recipe_id not in liked_recipes.split(','):
+            recipe_ids = f'{liked_recipes}{recipe_id},'
+            request.session['recipe_ids'] = recipe_ids
+            response.set_cookie('liked_recipes', recipe_ids)
+        return response
+
+
+def liked_recipe_page(request):
+    liked_recipes = request.COOKIES.get('liked_recipes', '')
+    print(dict(request.session))
+    recipes = Recipe.objects.filter(id__in=list(map(int, liked_recipes.split(',')[:-1])))
+    context = {
+        'recipe_list': recipes,
+        'liked_recipe_page': True
+    }
+    return render(request, "recipes.html", context)

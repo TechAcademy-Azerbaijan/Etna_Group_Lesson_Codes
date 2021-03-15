@@ -9,9 +9,9 @@
     <div class="container">
         <div class="row no-gutters slider-text align-items-end justify-content-center">
             <div class="col-md-9 ftco-animate pb-5 text-center">
-                <h1 class="mb-3 bread">Recipes</h1>
+                <h1 class="mb-3 bread">{% if liked_recipe_page %} Liked Recipes {% else %} Recipes {% endif %}</h1>
                 <p class="breadcrumbs"><span class="mr-2"><a href="index.html">Home <i
-                        class="ion-ios-arrow-forward"></i></a></span> <span>Recipes <i
+                        class="ion-ios-arrow-forward"></i></a></span>  <span> Recipes <i
                         class="ion-ios-arrow-forward"></i></span></p>
             </div>
         </div>
@@ -44,10 +44,20 @@
                             {%  endwith %}
                                 <h3><a href="single.html">{{ forloop.counter }}. {{ recipe_item.title|upper }}</a></h3>
 
+
                                 <p>{{ recipe_item.short_description|my_split:"a" }}
                                 </p>
-                                <p class="mb-0"><a href="single.html" class="btn btn-primary">Read More <span
-                                        class="icon-arrow_forward ml-4"></span></a></p>
+                                <p class="mb-0 d-inline">
+                                    <a href="single.html" class="btn btn-primary d-inline">Read More
+                                        <span class="icon-arrow_forward ml-4"></span>
+
+                                    </a>
+                                    <form class="d-inline ml-4" action="{% url 'stories:like' %}" method="post">
+                                        {% csrf_token %}
+                                        <input type="hidden" name="recipe_id" value="{{ recipe_item.id }}">
+                                        <input type="submit" class="btn btn-primary" value="Like">
+                                    </form>
+                                </p>
                             </div>
                         </div>
                     </div>

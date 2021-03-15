@@ -13,6 +13,7 @@
                 <li class="nav-item {% if 'stories' in request.path %} active {% endif %}"><a href="{% url 'stories:stories' %}" class="nav-link">Stories</a></li>
                 <li class="nav-item {% if 'recipes' in request.path %} active {% endif %}"><a href="{% url 'stories:recipes' %}" class="nav-link">Recipes</a></li>
                 <li class="nav-item {% if 'contact' in request.path %} active {% endif %}"><a href="{% url 'stories:contact' %}" class="nav-link">Contact</a></li>
+            <li class="nav-item {% if 'liked_recipe_page' in request.path %} active {% endif %}"><a href="{% url 'stories:liked_recipe_page' %}" class="nav-link">Liked Recipes</a></li>
                 <li><a href="" class="btn btn-black px-3 px-md-4 py-3">Sign in</a></li>
             </ul>
         </div>
