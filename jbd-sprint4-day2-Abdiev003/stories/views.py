@@ -1,3 +1,4 @@
+from django.contrib.auth.decorators import login_required
 from django.http import HttpResponse
 from django.shortcuts import render, redirect
 from django.contrib import messages
@@ -27,6 +28,7 @@ def StoriesPage(request):
     return render(request, "strories.html",)
 
 
+@login_required
 def RecipesPage(request):
     recipes = Recipe.objects.filter(is_published=True)
     arr = ['idris', 'emrah', 'eli']

@@ -1,11 +1,14 @@
 from django.shortcuts import render, redirect
-from django.urls import  reverse_lazy
+from django.urls import reverse_lazy
 from django.contrib import messages
 from django.utils.encoding import force_text
 from django.utils.http import urlsafe_base64_decode
-from django.contrib.auth import  get_user_model
+from django.contrib.auth import get_user_model
+from django.contrib.auth import authenticate, login as django_login, logout as django_logout
+from django.contrib.auth.decorators import login_required
+from django.contrib.auth.views import LoginView
 
-from accounts.forms import RegistrationForm
+from accounts.forms import RegistrationForm, LoginForm
 from accounts.tasks import send_confirmation_mail
 from accounts.tools.tokens import account_activation_token
 
@@ -49,3 +52,40 @@ def activate(request, uidb64, token):
     else:
         messages.error(request, 'Email is not activated')
         return redirect(reverse_lazy('accounts:register'))
+
+
+# http://localhost:8000/admin/login/?next=/admin/stories/recipe/1/change/1
+def login(request):
+    next_page = request.GET.get('next')  # /admin/stories/recipe/1/change/1
+    form = LoginForm()
+    if request.method == 'POST':
+        form = LoginForm(data=request.POST)
+        if form.is_valid():
+            email = form.cleaned_data.get('email')
+            password = form.cleaned_data.get('password')
+            user = authenticate(username=email, password=password)
+            if user:
+                django_login(request, user)
+                messages.success(request, 'Siz ugurla daxil oldunuz')
+                if next_page:
+                    return redirect(next_page)
+                return redirect(reverse_lazy('stories:index'))
+            else:
+                messages.success(request, 'Daxil etdiyiniz melumatlar yalnisdir')
+    context = {
+        'form': form
+    }
+    return render(request, 'login.html', context)
+
+
+@login_required
+def logout(request):
+    django_logout(request)
+    messages.success(request, 'Siz cixis etdiniz')
+    return redirect(reverse_lazy('stories:index'))
+
+
+@login_required
+def change_password(request):
+    print(request.user)
+    return render(request, 'change_password.html')

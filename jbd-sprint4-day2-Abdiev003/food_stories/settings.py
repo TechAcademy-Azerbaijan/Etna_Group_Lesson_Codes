@@ -14,6 +14,8 @@ from pathlib import Path
 import os
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
+from django.urls import reverse_lazy
+
 BASE_DIR = Path(__file__).resolve().parent.parent
 
 
@@ -170,6 +172,8 @@ JET_THEMES = [
         'title': 'Light Gray'
     }
 ]
+
+LOGIN_URL = reverse_lazy('accounts:login')
 
 # email details
 EMAIL_BACKEND = "django.core.mail.backends.smtp.EmailBackend"

@@ -1,7 +1,7 @@
 from django import forms
 from django.contrib.auth import get_user_model, password_validation
 from django.contrib.auth.password_validation import validate_password
-from django.contrib.auth.forms import UserCreationForm
+from django.contrib.auth.forms import UserCreationForm, AuthenticationForm, PasswordChangeForm
 from django.utils.translation import gettext_lazy as _
 
 User = get_user_model()
@@ -74,3 +74,21 @@ class RegistrationForm(UserCreationForm):
     #     if password1 != password2:
     #         raise forms.ValidationError('password and confirm password is not same')
     #     return super().clean()
+
+
+class LoginForm(forms.Form):
+    email = forms.EmailField(max_length=40, widget=forms.EmailInput(attrs={
+        'class': 'form-control',
+        'placeholder': 'Email'
+    }))
+    password = forms.CharField(max_length=40, widget=forms.PasswordInput(attrs={
+        'class': 'form-control',
+        'placeholder': 'Password'
+    }))
+    #
+    # class Meta:
+    #     model = User
+    #     fields = (
+    #         'email',
+    #         'password'
+    #     )
