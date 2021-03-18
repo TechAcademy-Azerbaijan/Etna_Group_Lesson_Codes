@@ -21,7 +21,7 @@ class RecipeAdmin(admin.ModelAdmin):
         ('Melumatlar', {
             'description': 'bu saheler melumat xarakterlidir',
             # 'classes': ('collapse',),
-            'fields': ('title', 'short_description', 'description', 'image',)
+            'fields': ('title', 'slug', 'short_description', 'description', 'image',)
         }),
         ('relations', {
             'description': 'relations desc',

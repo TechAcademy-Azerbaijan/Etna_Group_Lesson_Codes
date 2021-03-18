@@ -1,11 +1,16 @@
+import math
+
 from django.contrib.auth.decorators import login_required
 from django.http import HttpResponse
 from django.shortcuts import render, redirect
 from django.contrib import messages
 from django.template.loader import render_to_string
+from django.views.generic import (
+    ListView, DetailView
+)
 
 from stories.forms import ContactForm
-from stories.models import Recipe
+from stories.models import Recipe, Tag
 
 
 def HomePage(request):
@@ -28,17 +33,59 @@ def StoriesPage(request):
     return render(request, "strories.html",)
 
 
-@login_required
-def RecipesPage(request):
-    recipes = Recipe.objects.filter(is_published=True)
-    arr = ['idris', 'emrah', 'eli']
-    welcome_msg = '<h1>Welcome</h1>'
-    context = {
-        'recipe_list': recipes,
-        'welcome_msg': welcome_msg,
-        'arr': arr
-    }
-    return render(request, "recipes.html", context)
+# @login_required
+# def RecipesPage(request):
+#     page = int(request.GET.get('page', 1))
+#     per_count = 2
+#     all_recipes_count = Recipe.objects.filter(is_published=True).count()
+#     recipes = Recipe.objects.filter(is_published=True)[per_count*(page-1):page*per_count]
+#     page_count = math.ceil(all_recipes_count/per_count)
+#     page_range = range(1, page_count+1)
+#     arr = ['idris', 'emrah', 'eli']
+#     welcome_msg = '<h1>Welcome</h1>'
+#     previous_page = page - 1 if not page == 1 else page
+#     next_page = page + 1 if not page == page_count else page
+#     context = {
+#         'recipe_list': recipes,
+#         'welcome_msg': welcome_msg,
+#         'page_range': page_range,
+#         'current_page': page,
+#         'previous_page': previous_page,
+#         'next_page': next_page,
+#         'arr': arr
+#     }
+#     return render(request, "recipes.html", context)
+
+
+class RecipeListView(ListView):
+    model = Recipe
+    template_name = 'recipes.html'
+    paginate_by = 2
+    # context_object_name = 'recipe_list'
+    # queryset = Recipe.objects.filter(is_published=True)
+
+    def get_queryset(self):
+        queryset = super().get_queryset()
+        tags = self.request.GET.get('tags')
+        print(tags)
+        queryset = queryset.filter(is_published=True)
+        if tags:
+            queryset = queryset.filter(tags__id=tags)
+        return queryset
+
+
+class RecipeDetailView(DetailView):
+    model = Recipe
+    template_name = 'recipe-detail.html'
+    context_object_name = 'recipe_tag'
+    queryset = Recipe.objects.filter(is_published=True)
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['tags'] = Tag.objects.all()
+        return context
+
+
 
 
 def ContactPage(request):
