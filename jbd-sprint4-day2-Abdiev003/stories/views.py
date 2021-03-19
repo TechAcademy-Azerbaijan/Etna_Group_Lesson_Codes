@@ -1,16 +1,18 @@
 import math
 
 from django.contrib.auth.decorators import login_required
+from django.contrib.auth.mixins import LoginRequiredMixin
 from django.http import HttpResponse
 from django.shortcuts import render, redirect
 from django.contrib import messages
 from django.template.loader import render_to_string
+from django.urls import reverse_lazy
 from django.views.generic import (
-    ListView, DetailView
+    ListView, DetailView, CreateView, TemplateView
 )
 
-from stories.forms import ContactForm
-from stories.models import Recipe, Tag
+from stories.forms import ContactForm, RecipesForm
+from stories.models import Recipe, Tag, Contact
 
 
 def HomePage(request):
@@ -30,7 +32,7 @@ def AboutPage(request):
 
 
 def StoriesPage(request):
-    return render(request, "strories.html",)
+    return render(request, "strories.html", )
 
 
 # @login_required
@@ -61,6 +63,7 @@ class RecipeListView(ListView):
     model = Recipe
     template_name = 'recipes.html'
     paginate_by = 2
+
     # context_object_name = 'recipe_list'
     # queryset = Recipe.objects.filter(is_published=True)
 
@@ -86,20 +89,40 @@ class RecipeDetailView(DetailView):
         return context
 
 
+# def ContactPage(request):
+#     form = ContactForm()
+#     if request.method == 'POST':
+#         form = ContactForm(data=request.POST)
+#         if form.is_valid():
+#             form.save()
+#             messages.success(request, 'Sizin muracietiniz qebul edildi.')
+#             return redirect('/recipes/')
+#     context = {
+#         'form': form
+#     }
+#     return render(request, "contact.html", context)
 
 
-def ContactPage(request):
-    form = ContactForm()
-    if request.method == 'POST':
-        form = ContactForm(data=request.POST)
-        if form.is_valid():
-            form.save()
-            messages.success(request, 'Sizin muracietiniz qebul edildi.')
-            return redirect('/recipes/')
-    context = {
-        'form': form
-    }
-    return render(request, "contact.html", context)
+class ContactView(CreateView):
+    form_class = ContactForm
+    # fields = '__all__'
+    # model = Contact
+    template_name = 'contact.html'
+    success_url = reverse_lazy('stories:index')
+
+    def form_valid(self, form):
+        result = super(ContactView, self).form_valid(form)
+        messages.success(self.request, 'Sizin muracietiniz qebul edildi.')
+        return result
+
+
+class CreateRecipeView(LoginRequiredMixin, CreateView):
+    form_class = RecipesForm
+    template_name = 'recipes-add.html'
+
+    def form_valid(self, form):
+        form.instance.author = self.request.user
+        return super(CreateRecipeView, self).form_valid(form)
 
 
 def like_recipe(request):

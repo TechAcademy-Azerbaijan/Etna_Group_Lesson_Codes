@@ -1,3 +1,5 @@
+from django.contrib.auth.mixins import LoginRequiredMixin
+from django.core.exceptions import PermissionDenied
 from django.shortcuts import render, redirect
 from django.urls import reverse_lazy
 from django.contrib import messages
@@ -7,8 +9,9 @@ from django.contrib.auth import get_user_model
 from django.contrib.auth import authenticate, login as django_login, logout as django_logout
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.views import LoginView
+from django.views.generic import TemplateView, DetailView, UpdateView
 
-from accounts.forms import RegistrationForm, LoginForm
+from accounts.forms import RegistrationForm, LoginForm, EditProfileForm
 from accounts.tasks import send_confirmation_mail
 from accounts.tools.tokens import account_activation_token
 
@@ -89,3 +92,24 @@ def logout(request):
 def change_password(request):
     print(request.user)
     return render(request, 'change_password.html')
+
+
+class UserProfileView(DetailView):
+    model = User
+    template_name = 'user-profile.html'
+    context_object_name = 'user'
+
+
+class UserEditProfileView(LoginRequiredMixin, UpdateView):
+    form_class = EditProfileForm
+    model = User
+    template_name = 'edit-profile.html'
+
+    def get_object(self):
+        return self.request.user
+    
+    # def get(self, request, *args, **kwargs):
+    #     if not request.user == self.get_object():
+    #         raise PermissionDenied
+    #     return super(UserEditProfileView, self).get(request, *args, **kwargs)
+

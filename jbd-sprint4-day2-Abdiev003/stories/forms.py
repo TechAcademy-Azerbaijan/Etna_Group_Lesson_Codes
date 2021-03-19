@@ -1,6 +1,12 @@
-from django import forms
 
-from stories.models import Contact
+from django import forms
+from django.utils.translation import gettext_lazy as _
+
+from ckeditor_uploader.widgets import CKEditorUploadingWidget
+
+from stories.models import Contact, Recipe
+
+
 from stories.utils.validators import mail_validator
 
 
@@ -66,3 +72,33 @@ class ContactForm(forms.ModelForm):
     #     'placeholder': 'Message',
     #     'cols': 50,
     # }))
+
+
+class RecipesForm(forms.ModelForm):
+    # description = forms.CharField(widget=CKEditorWidget())
+
+    class Meta:
+        model = Recipe
+        fields = ('title', 'short_description', 'description', 'image', 'category', 'tags',)
+        widgets = {
+            'title': forms.TextInput(attrs={
+                'class': 'form-control',
+                'placeholder': _('Resept Başlığı'),
+            }),
+            'short_description': forms.TextInput(attrs={
+                'class': 'form-control',
+                'placeholder': _('Qisa Mezmun'),
+            }),
+            'description': CKEditorUploadingWidget(attrs={
+                'class': 'form-control',
+                'placeholder': 'Mezmun',
+            }),
+            'category': forms.Select(attrs={
+                'class': 'form-control',
+                'placeholder': 'Category',
+            }),
+            'tags': forms.SelectMultiple(attrs={
+                'class': 'form-control',
+                'placeholder': 'Tags',
+            }),
+        }
