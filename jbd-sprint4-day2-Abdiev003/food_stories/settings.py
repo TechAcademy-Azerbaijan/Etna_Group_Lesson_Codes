@@ -47,6 +47,7 @@ INSTALLED_APPS = [
     # third party packages
     'ckeditor',
     'ckeditor_uploader',
+    'social_django',
 
     # custom apps
     'stories',
@@ -61,7 +62,16 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'social_django.middleware.SocialAuthExceptionMiddleware',
 ]
+
+AUTHENTICATION_BACKENDS = [
+    'social_core.backends.google.GoogleOAuth2',
+    'social_core.backends.facebook.FacebookOAuth2',
+    'django.contrib.auth.backends.ModelBackend',
+]
+
+
 
 ROOT_URLCONF = 'food_stories.urls'
 
@@ -76,6 +86,9 @@ TEMPLATES = [
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
+
+                'social_django.context_processors.backends',  # <--
+                'social_django.context_processors.login_redirect', # <--
             ],
         },
     },
@@ -193,6 +206,34 @@ JET_THEMES = [
 ]
 
 LOGIN_URL = reverse_lazy('accounts:login')
+LOGIN_REDIRECT_URL = reverse_lazy('stories:index')
+LOGOUT_URL = reverse_lazy('accounts:logout')
+LOGOUT_REDIRECT_URL = reverse_lazy('stories:index')
+
+SOCIAL_AUTH_FACEBOOK_KEY = '169164915044824'        # App ID
+SOCIAL_AUTH_FACEBOOK_SECRET = '336214ce573b5f31df21e345ae037143'  # App Secret
+SOCIAL_AUTH_FACEBOOK_SCOPE = ['email', 'user_friends']
+SOCIAL_AUTH_FACEBOOK_PROFILE_EXTRA_PARAMS = {
+    'fields': 'id,name,email,picture',
+}
+
+SOCIAL_AUTH_GOOGLE_OAUTH2_KEY = '360419868722-ulm9n2tok5lsmiin5psv75it4l2jp9ov.apps.googleusercontent.com'
+SOCIAL_AUTH_GOOGLE_OAUTH2_SECRET = 'TUxQnlu3xpYPNijrYAtzcA2D'
+
+SOCIAL_AUTH_URL_NAMESPACE = 'social'
+
+SOCIAL_AUTH_PIPELINE = (
+    'social_core.pipeline.social_auth.social_details',
+    'social_core.pipeline.social_auth.social_uid',
+    'social_core.pipeline.social_auth.social_user',
+    'social_core.pipeline.user.get_username',
+    'social_core.pipeline.social_auth.associate_by_email',
+    'social_core.pipeline.user.create_user',
+    'social_core.pipeline.social_auth.associate_user',
+    'social_core.pipeline.social_auth.load_extra_data',
+    'social_core.pipeline.user.user_details',
+    'accounts.tools.social_auth.update_user_social_data', # custom pipeline
+)
 
 # email details
 EMAIL_BACKEND = "django.core.mail.backends.smtp.EmailBackend"
