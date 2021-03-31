@@ -1,4 +1,4 @@
-{% load custom_tags %}
+{% load custom_tags i18n %}
 <footer class="ftco-footer ftco-footer-2 ftco-section">
     <div class="container">
         <div class="row mb-5">
@@ -51,6 +51,19 @@
                                         class="text">info@yourdomain.com</span></a>
                             </li>
                         </ul>
+                        <form action="{% url 'set_language' %}" method="post">
+                          {% csrf_token %}
+                          <input name="next" type="hidden" value="{{ request.get_full_path|slice:'3:' }}" />
+                          <select onchange="this.form.submit()" name="language">
+                            {% get_language_info_list for LANGUAGES as languages %}
+                              {% for language in languages %}
+                                <option value="{{ language.code }}"{% if language.code == LANGUAGE_CODE %} selected="selected"{% endif %}>
+                                  {{ language.code }}
+                                </option>
+                              {% endfor %}
+                          </select>
+{#                          <input type="submit" value="Change" />#}
+                        </form>
                     </div>
                 </div>
             </div>

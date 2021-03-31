@@ -32,11 +32,11 @@ class ContactForm(forms.ModelForm):
         widgets = {
             'full_name': forms.TextInput(attrs={
                 'class': 'form-control',
-                'placeholder': 'Your name'
+                'placeholder': _('Your name')
             }),
             'email': forms.EmailInput(attrs={
                 'class': 'form-control',
-                'placeholder': 'Your email'
+                'placeholder': _('Your email')
             }),
             'subject': forms.TextInput(attrs={
                 'class': 'form-control',

@@ -18,12 +18,20 @@ from django.urls import path, include
 from django.conf import settings
 from django.conf.urls.static import static
 
+from django.conf.urls.i18n import i18n_patterns
+from django.utils.translation import ugettext_lazy as _
+
 urlpatterns = [
     path('jet/', include('jet.urls', 'jet')),  # Django JET URLS
     path('jet/dashboard/', include('jet.dashboard.urls', 'jet-dashboard')),  # Django JET dashboard URLS
+    path('social-auth/', include('social_django.urls', namespace="social")),
+    path('ckeditor/', include('ckeditor_uploader.urls')),
+    path('i18n/', include('django.conf.urls.i18n')),
+] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+
+urlpatterns += i18n_patterns(
     path('admin/', admin.site.urls),
     path('', include("stories.urls")),
     path('accounts/', include('accounts.urls', namespace='accounts')),
-    path('social-auth/', include('social_django.urls', namespace="social")),
-    path('ckeditor/', include('ckeditor_uploader.urls')),
-] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+)
+

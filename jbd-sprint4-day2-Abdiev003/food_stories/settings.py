@@ -18,7 +18,6 @@ from django.urls import reverse_lazy
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 
-
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/3.1/howto/deployment/checklist/
 
@@ -28,7 +27,7 @@ SECRET_KEY = '1v*a0pr6it4)wcfzz943-)rs!*pfd)ah$y&e-&8-j_rou5f5*h'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['*']
 
 AUTH_USER_MODEL = 'accounts.User'
 
@@ -37,6 +36,7 @@ AUTH_USER_MODEL = 'accounts.User'
 INSTALLED_APPS = [
     'jet.dashboard',
     'jet',
+    'modeltranslation',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -49,20 +49,25 @@ INSTALLED_APPS = [
     'ckeditor_uploader',
     'social_django',
 
+
     # custom apps
-    'stories',
+    'stories.apps.StoriesConfig',
     'accounts',
 ]
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
+    'food_stories.middleware.force_default_middleware.force_default_language_middleware',
+    'django.middleware.locale.LocaleMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
     'social_django.middleware.SocialAuthExceptionMiddleware',
+
+    'stories.middleware.BlackListIPMiddleware',
 ]
 
 AUTHENTICATION_BACKENDS = [
@@ -70,8 +75,6 @@ AUTHENTICATION_BACKENDS = [
     'social_core.backends.facebook.FacebookOAuth2',
     'django.contrib.auth.backends.ModelBackend',
 ]
-
-
 
 ROOT_URLCONF = 'food_stories.urls'
 
@@ -87,15 +90,15 @@ TEMPLATES = [
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
 
+                'django.template.context_processors.i18n',
                 'social_django.context_processors.backends',  # <--
-                'social_django.context_processors.login_redirect', # <--
+                'social_django.context_processors.login_redirect',  # <--
             ],
         },
     },
 ]
 
 WSGI_APPLICATION = 'food_stories.wsgi.application'
-
 
 # Database
 # https://docs.djangoproject.com/en/3.1/ref/settings/#databases
@@ -110,7 +113,6 @@ DATABASES = {
         'PORT': 5432
     }
 }
-
 
 # Password validation
 # https://docs.djangoproject.com/en/3.1/ref/settings/#auth-password-validators
@@ -129,7 +131,6 @@ AUTH_PASSWORD_VALIDATORS = [
         'NAME': 'django.contrib.auth.password_validation.NumericPasswordValidator',
     },
 ]
-
 
 # Internationalization
 # https://docs.djangoproject.com/en/3.1/topics/i18n/
@@ -170,13 +171,26 @@ STATICFILES_DIRS = [
 MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 
+
+ugettext = lambda s: s
+
+LANGUAGES = (
+    ('en', ugettext('English')),
+    ('ru', ugettext('Russia')),
+    ('az', ugettext('Azerbaijan')),
+)
+
+LOCALE_PATHS = (
+    os.path.join(BASE_DIR, 'locale/'),
+)
+
 # JET CONFIGs
 JET_DEFAULT_THEME = 'light-gray'
 JET_THEMES = [
     {
-        'theme': 'default', # theme folder name
-        'color': '#47bac1', # color of the theme's button in user menu
-        'title': 'Default' # theme title
+        'theme': 'default',  # theme folder name
+        'color': '#47bac1',  # color of the theme's button in user menu
+        'title': 'Default'  # theme title
     },
     {
         'theme': 'green',
@@ -210,7 +224,7 @@ LOGIN_REDIRECT_URL = reverse_lazy('stories:index')
 LOGOUT_URL = reverse_lazy('accounts:logout')
 LOGOUT_REDIRECT_URL = reverse_lazy('stories:index')
 
-SOCIAL_AUTH_FACEBOOK_KEY = '169164915044824'        # App ID
+SOCIAL_AUTH_FACEBOOK_KEY = '169164915044824'  # App ID
 SOCIAL_AUTH_FACEBOOK_SECRET = '336214ce573b5f31df21e345ae037143'  # App Secret
 SOCIAL_AUTH_FACEBOOK_SCOPE = ['email', 'user_friends']
 SOCIAL_AUTH_FACEBOOK_PROFILE_EXTRA_PARAMS = {
@@ -232,7 +246,7 @@ SOCIAL_AUTH_PIPELINE = (
     'social_core.pipeline.social_auth.associate_user',
     'social_core.pipeline.social_auth.load_extra_data',
     'social_core.pipeline.user.user_details',
-    'accounts.tools.social_auth.update_user_social_data', # custom pipeline
+    'accounts.tools.social_auth.update_user_social_data',  # custom pipeline
 )
 
 # email details

@@ -69,7 +69,7 @@ class Recipe(models.Model):
 
     # information's
     title = models.CharField('Basliq', max_length=127)
-    slug = models.SlugField('Slug', max_length=155, editable=False)
+    slug = models.SlugField('Slug', max_length=155,)
     short_description = models.CharField('Qisa Mezmun', max_length=255)
     image = models.ImageField('Sekil', upload_to='recipe_images', )
 
@@ -90,12 +90,14 @@ class Recipe(models.Model):
     def __str__(self):
         return f"{self.title} Kategoriyasi: {self.category.title}"
 
-    def save(self, *args, **kwargs):
-        self.slug = slugify(self.title)
-        return super(Recipe, self).save(*args, **kwargs)
+    # def save(self, *args, **kwargs):
+    #     self.slug = slugify(self.title)
+    #     return super(Recipe, self).save(*args, **kwargs)
 
     def get_absolute_url(self):
-        return reverse_lazy('stories:recipe_detail', kwargs={'slug': self.slug})
+        if self.slug:
+            return reverse_lazy('stories:recipe_detail', kwargs={'slug': self.slug})
+        return reverse_lazy('stories:recipe_detail', kwargs={'slug': 'sjkdnf'})
 
 
 # resept = Recipe()

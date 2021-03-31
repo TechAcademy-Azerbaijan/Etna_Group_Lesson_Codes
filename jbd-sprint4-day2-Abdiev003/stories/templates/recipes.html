@@ -28,7 +28,7 @@
                     <div class="col-md-6 col-lg-12 ftco-animate">
                         <div class="blog-entry d-lg-flex">
                             <div class="half">
-                                <a href="{% url 'stories:recipe_detail'  recipe_item.slug %}" class="img d-flex align-items-end"
+                                <a href="{{ recipe_item.get_absolute_url }}" class="img d-flex align-items-end"
                                    style="background-image: url({% static 'assets/images/image_1.jpg' %});">
                                     <div class="overlay"></div>
                                 </a>
@@ -42,13 +42,13 @@
                                     <li>{{ loop_index }}. {{ forloop.counter }} {{ item }}</li>
                                 {% endfor %}
                             {%  endwith %}
-                                <h3><a href="{% url 'stories:recipe_detail' recipe_item.slug %}">{{ forloop.counter }}. {{ recipe_item.title|upper }}</a></h3>
+                                <h3><a href="{{ recipe_item.get_absolute_url }}">{{ forloop.counter }}. {{ recipe_item.title|upper }} slug {{ recipe_item.category.slug }}</a></h3>
 
 
                                 <p>{{ recipe_item.short_description|my_split:"a" }}
                                 </p>
                                 <p class="mb-0 d-inline">
-                                    <a href="{% url 'stories:recipe_detail'  recipe_item.slug %}" class="btn btn-primary d-inline">Read More
+                                    <a href="{{ recipe_item.get_absolute_url }}" class="btn btn-primary d-inline">Read More
                                         <span class="icon-arrow_forward ml-4"></span>
 
                                     </a>

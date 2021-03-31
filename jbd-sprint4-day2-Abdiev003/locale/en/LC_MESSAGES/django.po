@@ -1,0 +1,100 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: PACKAGE VERSION\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2021-03-31 06:50+0000\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"Language: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+#: accounts/admin.py:12
+msgid "Personal info"
+msgstr ""
+
+#: accounts/admin.py:13
+msgid "Permissions"
+msgstr ""
+
+#: accounts/admin.py:16
+msgid "Important dates"
+msgstr ""
+
+#: accounts/forms.py:12
+msgid "Password"
+msgstr ""
+
+#: accounts/forms.py:21
+msgid "Password confirmation"
+msgstr ""
+
+#: accounts/forms.py:26
+msgid "Enter the same password as before, for verification."
+msgstr ""
+
+#: accounts/models.py:8
+msgid "email address"
+msgstr ""
+
+#: accounts/tasks.py:18
+msgid "Please confirm your account"
+msgstr ""
+
+#: accounts/templates/change_password.html:4 accounts/templates/login.html:4
+#: accounts/templates/register.html:4
+msgid "Register"
+msgstr ""
+
+#: accounts/templates/login.html:32
+msgid "Forgot password"
+msgstr ""
+
+#: accounts/templates/login.html:35
+msgid "Don't have an account? Sign up"
+msgstr ""
+
+#: food_stories/settings.py:176
+msgid "English"
+msgstr ""
+
+#: food_stories/settings.py:177
+msgid "Russia"
+msgstr ""
+
+#: food_stories/settings.py:178
+msgid "Azerbaijan"
+msgstr ""
+
+#: stories/forms.py:35
+msgid "Your name"
+msgstr ""
+
+#: stories/forms.py:39
+msgid "Your email"
+msgstr ""
+
+#: stories/forms.py:86
+msgid "Resept Başlığı"
+msgstr ""
+
+#: stories/forms.py:90
+msgid "Qisa Mezmun"
+msgstr ""
+
+#: stories/templates/includes/navbar.html:12
+msgid "Home"
+msgstr ""
+
+#: stories/templates/includes/navbar.html:13
+msgid "About"
+msgstr ""

@@ -1,4 +1,6 @@
 from django.contrib import admin
+from modeltranslation.admin import TranslationAdmin
+
 from stories.models import (
     Recipe,
     Contact,
@@ -13,8 +15,12 @@ class CommentAdmin(admin.ModelAdmin):
     list_display = ('id', 'author', 'parent_comment', 'created_at')
 
 
-class RecipeAdmin(admin.ModelAdmin):
-    list_display = ('title', 'author', 'category', 'order', 'is_published', 'created_at')
+class TagAdmin(TranslationAdmin):
+    list_display = ('id', 'title', 'created_at')
+
+
+class RecipeAdmin(TranslationAdmin):
+    list_display = ('id', 'title', 'author', 'category', 'order', 'is_published', 'created_at')
     list_filter = ('is_published', 'author__username', 'category__title')
     search_fields = ('title', 'category__title', )
     fieldsets = (
@@ -46,5 +52,6 @@ class CategoryAdmin(admin.ModelAdmin):
 
 
 admin.site.register(Recipe, RecipeAdmin)
-admin.site.register([Contact, Tag])
+admin.site.register(Tag, TagAdmin)
+admin.site.register([Contact])
 
