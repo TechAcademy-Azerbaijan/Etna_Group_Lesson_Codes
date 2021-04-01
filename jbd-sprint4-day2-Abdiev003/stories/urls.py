@@ -20,5 +20,5 @@ urlpatterns = [
     path('recipes/<slug:slug>/', RecipeDetailView.as_view(), name='recipe_detail'),
     path('contact/', ContactView.as_view(), name="contact"),
     path('like/', like_recipe, name='like'),
-    path('liked_recipe_page/', liked_recipe_page, name='liked_recipe_page')
+    path('liked_recipe_page/', liked_recipe_page, name='liked_recipe_page'),
 ]

@@ -99,6 +99,16 @@ class Recipe(models.Model):
             return reverse_lazy('stories:recipe_detail', kwargs={'slug': self.slug})
         return reverse_lazy('stories:recipe_detail', kwargs={'slug': 'sjkdnf'})
 
+    @property
+    def serialized_data(self):
+        return {
+            'title': self.title,
+            'description': self.description,
+            'short_description': self.short_description,
+            'slug': self.slug,
+            'created_at': str(self.created_at),
+        }
+
 
 # resept = Recipe()
 # resept.category
