@@ -11,7 +11,12 @@ from django.contrib.auth.decorators import login_required
 from django.contrib.auth.views import LoginView
 from django.views.generic import TemplateView, DetailView, UpdateView
 
+from rest_framework.authtoken.views import ObtainAuthToken
+
+from rest_framework.response import Response
+
 from accounts.forms import RegistrationForm, LoginForm, EditProfileForm
+from accounts.serializers import UserLoginSerializer
 from accounts.tasks import send_confirmation_mail
 from accounts.tools.tokens import account_activation_token
 
@@ -107,9 +112,20 @@ class UserEditProfileView(LoginRequiredMixin, UpdateView):
 
     def get_object(self):
         return self.request.user
-    
+
     # def get(self, request, *args, **kwargs):
     #     if not request.user == self.get_object():
     #         raise PermissionDenied
     #     return super(UserEditProfileView, self).get(request, *args, **kwargs)
 
+
+class CustomAuthToken(ObtainAuthToken):
+
+    def post(self, request, *args, **kwargs):
+        serializer = self.serializer_class(data=request.data,
+                                           context={'request': request})
+        serializer.is_valid(raise_exception=True)
+        user = serializer.validated_data['user']
+        user_serializer = UserLoginSerializer(user)
+
+        return Response(user_serializer.data, )

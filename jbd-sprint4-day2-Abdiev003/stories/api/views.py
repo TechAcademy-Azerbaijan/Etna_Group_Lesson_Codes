@@ -1,23 +1,107 @@
+import json
+
+from rest_framework.exceptions import NotFound
+from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from rest_framework import status
 from stories.models import Recipe
 from stories.api.serializers import RecipeSerializer, RecipeCreateSerializer
-from rest_framework.decorators import api_view
+# from rest_framework.decorators import api_view
+from rest_framework.views import APIView
+from rest_framework.generics import ListCreateAPIView, RetrieveUpdateDestroyAPIView
 
 
-@api_view(('GET', 'POST'))
-def recipes(request):
-    if request.method == 'POST':
-        recipe_data = request.data
-        serializer = RecipeCreateSerializer(data=recipe_data, context={'request': request})
-        serializer.is_valid(raise_exception=True)
-        serializer.save()
-        return Response(serializer.data, status=status.HTTP_201_CREATED)
-    recipes = Recipe.objects.filter(is_published=True)
-    serializer = RecipeSerializer(recipes, many=True, context={'request': request})
+class RecipeAPIView(ListCreateAPIView):
+    queryset = Recipe.objects.filter(is_published=True)
+    serializer_class = RecipeSerializer
 
-    # serialized_recipe_list = [recipe.serialized_data for recipe in recipes]
-    # json_data = {
-    #     'recipes': serialized_recipe_list
-    # }
-    return Response(serializer.data)
+    def get_serializer_class(self):
+        if self.request.method == 'GET':
+            return self.serializer_class
+        return RecipeCreateSerializer
+
+
+class RecipeDetailAPIView(RetrieveUpdateDestroyAPIView):
+    permission_classes = (IsAuthenticated,)
+    queryset = Recipe.objects.filter(is_published=True)
+    serializer_class = RecipeSerializer
+
+    def get_serializer_class(self):
+        if self.request.method == 'GET':
+            return self.serializer_class
+        return RecipeCreateSerializer
+
+
+
+#
+# @api_view(('GET', 'POST'))
+# def recipes(request):
+#     if request.method == 'POST':
+#         recipe_data = request.data
+#         serializer = RecipeCreateSerializer(data=recipe_data, context={'request': request})
+#         serializer.is_valid(raise_exception=True)
+#         serializer.save()
+#         return Response(serializer.data, status=status.HTTP_201_CREATED)
+#     recipes = Recipe.objects.filter(is_published=True)
+#     serializer = RecipeSerializer(recipes, many=True, context={'request': request})
+#     return Response(serializer.data)
+
+
+# class RecipeAPIView(APIView):
+#
+#     def get(self, request, *args, **kwargs):
+#         recipes = Recipe.objects.filter(is_published=True)
+#         filter_by = json.loads(json.dumps(request.GET))
+#         if filter_by:
+#             recipes = recipes.filter(**filter_by)  # title=resept
+#         serializer = RecipeSerializer(recipes, many=True, context={'request': request})
+#         return Response(serializer.data)
+#
+#     def post(self, request, *args, **kwargs):
+#         recipe_data = request.data
+#         serializer = RecipeCreateSerializer(data=recipe_data, context={'request': request})
+#         serializer.is_valid(raise_exception=True)
+#         serializer.save()
+#         return Response(serializer.data, status=status.HTTP_201_CREATED)
+
+
+# class RecipeDetailAPIView(APIView):
+#
+#     def get(self, request, *args, **kwargs):
+#         recipe_id = kwargs.get('pk')
+#         recipe = Recipe.objects.filter(pk=recipe_id, is_published=True).first()
+#         if not recipe:
+#             raise NotFound
+#         serializer = RecipeSerializer(recipe, context={'request': request})
+#         return Response(serializer.data)
+#
+#     def put(self, request, *args, **kwargs):
+#         recipe_data = request.data
+#         recipe_id = kwargs.get('pk')
+#         recipe = Recipe.objects.filter(pk=recipe_id, is_published=True).first()
+#         if not recipe:
+#             raise NotFound
+#         serializer = RecipeCreateSerializer(data=recipe_data, instance=recipe, context={'request': request})
+#         serializer.is_valid(raise_exception=True)
+#         serializer.save()
+#         return Response(serializer.data, status=status.HTTP_200_OK)
+#
+#     def patch(self, request, *args, **kwargs):
+#         recipe_data = request.data
+#         recipe_id = kwargs.get('pk')
+#         recipe = Recipe.objects.filter(pk=recipe_id, is_published=True).first()
+#         if not recipe:
+#             raise NotFound
+#         serializer = RecipeCreateSerializer(data=recipe_data, instance=recipe,
+#                                             partial=True, context={'request': request})
+#         serializer.is_valid(raise_exception=True)
+#         serializer.save()
+#         return Response(serializer.data, status=status.HTTP_200_OK)
+#
+#     def delete(self, request, *args, **kwargs):
+#         recipe_id = kwargs.get('pk')
+#         recipe = Recipe.objects.filter(pk=recipe_id, is_published=True)
+#         if not recipe:
+#             raise NotFound
+#         recipe.delete()
+#         return Response(status=status.HTTP_204_NO_CONTENT)

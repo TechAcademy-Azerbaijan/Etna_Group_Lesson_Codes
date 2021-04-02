@@ -19,7 +19,8 @@ from django.conf import settings
 from django.conf.urls.static import static
 
 from django.conf.urls.i18n import i18n_patterns
-from django.utils.translation import ugettext_lazy as _
+
+from accounts.views import CustomAuthToken
 
 urlpatterns = [
     path('jet/', include('jet.urls', 'jet')),  # Django JET URLS
@@ -34,5 +35,6 @@ urlpatterns += i18n_patterns(
     path('', include("stories.urls")),
     path('api/', include('stories.api.urls')),
     path('accounts/', include('accounts.urls', namespace='accounts')),
+    path('api/auth/login/', CustomAuthToken.as_view())
 )
 

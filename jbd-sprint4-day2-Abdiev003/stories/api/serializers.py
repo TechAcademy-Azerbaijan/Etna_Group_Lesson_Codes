@@ -1,23 +1,10 @@
 from rest_framework import serializers
 from django.contrib.auth import  get_user_model
+
+from accounts.serializers import UserSerializer
 from stories.models import Recipe, Tag
 
-User = get_user_model()
 
-
-class UserSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = User
-        fields = [
-            'id',
-            'first_name',
-            'last_name',
-            'image',
-            'username',
-            'email',
-            'bio',
-            'gender'
-        ]
 
 
 class TagSerializer(serializers.ModelSerializer):
