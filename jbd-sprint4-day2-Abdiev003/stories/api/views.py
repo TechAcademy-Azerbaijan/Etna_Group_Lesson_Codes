@@ -1,14 +1,14 @@
 import json
 
 from rest_framework.exceptions import NotFound
-from rest_framework.permissions import IsAuthenticated
+from rest_framework.permissions import IsAuthenticated, IsAuthenticatedOrReadOnly
 from rest_framework.response import Response
 from rest_framework import status
-from stories.models import Recipe
-from stories.api.serializers import RecipeSerializer, RecipeCreateSerializer
+from stories.models import Recipe, Subscriber
+from stories.api.serializers import RecipeSerializer, RecipeCreateSerializer, SubscriberSerializer
 # from rest_framework.decorators import api_view
 from rest_framework.views import APIView
-from rest_framework.generics import ListCreateAPIView, RetrieveUpdateDestroyAPIView
+from rest_framework.generics import ListCreateAPIView, RetrieveUpdateDestroyAPIView, CreateAPIView
 
 
 class RecipeAPIView(ListCreateAPIView):
@@ -22,7 +22,7 @@ class RecipeAPIView(ListCreateAPIView):
 
 
 class RecipeDetailAPIView(RetrieveUpdateDestroyAPIView):
-    permission_classes = (IsAuthenticated,)
+    permission_classes = (IsAuthenticatedOrReadOnly,)
     queryset = Recipe.objects.filter(is_published=True)
     serializer_class = RecipeSerializer
 
@@ -31,6 +31,10 @@ class RecipeDetailAPIView(RetrieveUpdateDestroyAPIView):
             return self.serializer_class
         return RecipeCreateSerializer
 
+
+class SubscribeAPIView(CreateAPIView):
+    queryset = Subscriber.objects.filter(is_active=True)
+    serializer_class = SubscriberSerializer
 
 
 #

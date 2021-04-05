@@ -49,7 +49,7 @@
 
 
                 <div class="pt-5 mt-5">
-                    <h3 class="mb-5">6 Comments</h3>
+                    <h3 class="mb-5"><span id="comment-count"></span> Comments</h3>
                     <ul class="comment-list">
                         <li class="comment">
                             <div class="vcard bio">
@@ -224,6 +224,14 @@
         </div>
     </div>
 </section> <!-- .section -->
+
+
+{% endblock %}
+{% block js %}
+    <script>
+        window.URLS['recipeDetail'] = '{% url "api:recipes_detail_api" '1234567' %}'
+            .replace('1234567', {{ recipe_tag.id }});
+    </script>
 
 
 {% endblock %}

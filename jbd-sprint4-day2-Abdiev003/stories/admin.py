@@ -6,7 +6,8 @@ from stories.models import (
     Contact,
     Category,
     Tag,
-    Comment
+    Comment,
+    Subscriber
 )
 
 
@@ -53,5 +54,5 @@ class CategoryAdmin(admin.ModelAdmin):
 
 admin.site.register(Recipe, RecipeAdmin)
 admin.site.register(Tag, TagAdmin)
-admin.site.register([Contact])
+admin.site.register([Contact, Subscriber])
 

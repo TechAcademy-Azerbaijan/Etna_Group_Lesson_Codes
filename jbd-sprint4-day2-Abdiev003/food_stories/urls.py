@@ -33,7 +33,7 @@ urlpatterns = [
 urlpatterns += i18n_patterns(
     path('admin/', admin.site.urls),
     path('', include("stories.urls")),
-    path('api/', include('stories.api.urls')),
+    path('api/', include('stories.api.urls', namespace='api')),
     path('accounts/', include('accounts.urls', namespace='accounts')),
     path('api/auth/login/', CustomAuthToken.as_view())
 )
