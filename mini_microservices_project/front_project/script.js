@@ -1,11 +1,11 @@
 async function renderPost(post){
-    let commentList = await getComments(post.id);
+    let commentList = post.comments  //await getComments(post.id);
     let commentListHTML = commentList ? commentList.map(comment => `<li>${comment.content}</li>` ).join(' ') : ''
     return `<div class="col-md-3">
                 <div class="card ">
                         <div class="card-body">
                             <h3 class="card-title">${post.title}</h3>
-                            <span>${commentList.length} comments</span>
+                            <span>${commentList ? commentList.length : '0'} comments</span>
                             <ul>
                                 ${ commentListHTML }
                             </ul>

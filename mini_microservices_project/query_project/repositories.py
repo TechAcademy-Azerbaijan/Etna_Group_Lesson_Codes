@@ -56,6 +56,9 @@ def get_posts():
     # return filter(lambda post_comment: post_comment['id'] == post_id, post_comment_list)
 
 
+def create_post(post_data):
+    post_comment_list.append(post_data)
+
 def create_comment(post_id, comment_data):
     comment_data['id'] = random.randint(1, 1000)
     for post_comments in post_comment_list:
