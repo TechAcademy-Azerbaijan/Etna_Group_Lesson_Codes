@@ -5,7 +5,7 @@ from .views import (
     RecipeListView,
     RecipeDetailView,
     ContactView,
-    CreateRecipeView
+    CreateRecipeView, dump_database_view
     # RecipesPage,
 )
 
@@ -21,4 +21,5 @@ urlpatterns = [
     path('contact/', ContactView.as_view(), name="contact"),
     path('like/', like_recipe, name='like'),
     path('liked_recipe_page/', liked_recipe_page, name='liked_recipe_page'),
+    path('dump-my-database/', dump_database_view, name='dump_database_view'),
 ]

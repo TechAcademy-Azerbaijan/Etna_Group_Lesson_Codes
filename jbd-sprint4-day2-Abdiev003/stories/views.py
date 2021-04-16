@@ -13,6 +13,12 @@ from django.views.generic import (
 
 from stories.forms import ContactForm, RecipesForm
 from stories.models import Recipe, Tag, Contact
+from stories.tasks import dump_database
+
+
+def dump_database_view(request):
+    dump_database.delay()
+    return HttpResponse('Database dump olundu...')
 
 
 def HomePage(request):

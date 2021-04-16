@@ -48,7 +48,7 @@ class RecipeSerializer(serializers.ModelSerializer):
             'slug',
             'order',
             'short_description',
-            'image',
+            # 'image',
             'description',
             'created_at',
             'category',
