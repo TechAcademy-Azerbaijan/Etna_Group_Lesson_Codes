@@ -2,6 +2,7 @@ from http import HTTPStatus
 
 from flask import request, send_from_directory, jsonify
 from marshmallow.exceptions import ValidationError
+from flasgger import swag_from
 
 from ..app import app
 from ..config.extentions import MEDIA_ROOT
@@ -16,6 +17,8 @@ def uploaded_file(filename):
 
 
 @app.route('/recipes/', methods=['GET', 'POST'])
+@swag_from('docs/all_recipes.yml', methods=['GET',])
+@swag_from('docs/create_recipe.yml', methods=['POST',])
 def recipes():
     if request.method == 'POST':
         try:

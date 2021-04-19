@@ -2,8 +2,12 @@ from sqlalchemy.sql import func
 from slugify import slugify
 from flask_login import UserMixin
 
+from .config.extentions import db, login_manager
 
-from .config.extentions import db
+
+@login_manager.user_loader
+def load_user(id):
+    return User.query.get(int(id))
 
 
 class SaveMixin(object):
