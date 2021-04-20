@@ -15,7 +15,7 @@ from ..config.extentions import MEDIA_ROOT
 from ..models import User
 from ..schemas.schema import UserSchema
 from ..utils.commons import save_file
-
+from ..utils.tokens import confirm_token
 
 
 @app.route('/uploads/<filename>')
@@ -32,6 +32,7 @@ def register():
         if image:
             user.image = save_file(image)
         user.save()
+        user.send_confirmation_mail()
         return UserSchema().jsonify(user), HTTPStatus.CREATED
     except ValidationError as err:
         return jsonify(err.messages), HTTPStatus.BAD_REQUEST
@@ -73,3 +74,21 @@ def refresh():
         'access_token': create_access_token(identity=user_id)
     }
     return jsonify(ret), HTTPStatus.OK
+
+
+@app.route('/confirm/<string:token>/')
+def confirm_email(token):
+    email = confirm_token(token)
+    if not email:
+        return jsonify({'message': 'The confirmation link is invalid or has expired.'}), HTTPStatus.OK
+    user = User.query.filter_by(email=email).first()
+    if not user:
+        return jsonify({'message': 'Account not found'}), HTTPStatus.NOT_FOUND
+    print('is active', user.is_active)
+    if user.is_active:
+        return jsonify({'message': 'Account already confirmed. Please login.'}), HTTPStatus.OK
+
+    user.is_active = True
+    user.save()
+    return jsonify({'message': 'You have confirmed your account. Thanks!'}), HTTPStatus.OK
+

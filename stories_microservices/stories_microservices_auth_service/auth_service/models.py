@@ -1,9 +1,19 @@
+from flask import render_template, url_for
 from sqlalchemy.sql import func
 from werkzeug.security import generate_password_hash
 from flask_login import UserMixin
 
 
-from .config.extentions import db
+from .publisher import Publish
+from .utils.tokens import generate_confirmation_token
+
+from .config.extentions import db, login_manager
+
+
+
+@login_manager.user_loader
+def load_user(id):
+    return User.query.get(int(id))
 
 
 class SaveMixin(object):
@@ -51,6 +61,19 @@ class User(UserMixin, SaveMixin, db.Model):
     @property
     def get_full_name(self):
         return f'{self.first_name} {self.last_name}'
+
+    def send_confirmation_mail(self):
+        token = generate_confirmation_token(self.email)
+        confirm_url = url_for('confirm_email', token=token, _external=True)
+        html = render_template('user/activate.html', confirm_url=confirm_url, user=self)
+        subject = 'Confirm your account'
+        to = (self.email,)
+        data = {
+            'subject': subject,
+            'body': html,
+            'to': to
+        }
+        Publish(data=data, event_type='send_mail')
 
 
 
