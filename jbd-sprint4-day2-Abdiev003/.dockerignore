@@ -1,0 +1,4 @@
+.venv/
+pgdb/
+htmlcov/
+.coverage
