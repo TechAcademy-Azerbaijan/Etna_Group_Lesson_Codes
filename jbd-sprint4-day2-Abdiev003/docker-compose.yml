@@ -33,6 +33,20 @@ services:
         - "postgres"
       env_file: ./.env
 
+  celery:
+    build:
+      context: .
+      dockerfile: celery.dockerfile
+    volumes:
+      - .:/code
+      - ./static/:/code/static
+      - ./media/:/code/media
+    command: celery -A food_stories worker --beat --scheduler django --loglevel=info
+    depends_on:
+      - "postgres"
+      - "redis"
+    env_file: ./.env
+
 
 #    adminer:
 #      image: adminer

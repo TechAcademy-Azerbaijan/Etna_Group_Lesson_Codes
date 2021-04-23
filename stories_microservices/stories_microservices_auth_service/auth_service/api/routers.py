@@ -11,7 +11,7 @@ from flask_jwt_extended import (
 from marshmallow.exceptions import ValidationError
 
 from ..app import app
-from ..config.extentions import MEDIA_ROOT
+from ..config.base import MEDIA_ROOT
 from ..models import User
 from ..schemas.schema import UserSchema
 from ..utils.commons import save_file
@@ -43,7 +43,9 @@ def login():
     data = dict(request.json or request.form)
     email = data.get('email')
     password = data.get('password')
+    print('email, password', email, password)
     user = User.query.filter_by(email=email).first()
+    print(user)
     if not user or not check_password_hash(user.password, password):
         return jsonify({'message': 'User not found'}), HTTPStatus.UNAUTHORIZED
 
