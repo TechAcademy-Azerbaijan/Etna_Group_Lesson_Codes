@@ -21,7 +21,7 @@ class UserSchema(ma.SQLAlchemyAutoSchema):
 
 class RecipeSchema(ma.SQLAlchemyAutoSchema):
     image = AbsoluteURLFor(
-        'uploaded_file',
+        'api.uploaded_file',
         filename='<image>'
     )
     slug = fields.String(attribute="slug", dump_only=True)

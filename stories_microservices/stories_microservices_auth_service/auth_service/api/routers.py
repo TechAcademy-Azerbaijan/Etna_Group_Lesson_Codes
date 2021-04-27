@@ -10,7 +10,7 @@ from flask_jwt_extended import (
 
 from marshmallow.exceptions import ValidationError
 
-from ..app import app
+from ..api import api
 from ..config.base import MEDIA_ROOT
 from ..models import User
 from ..schemas.schema import UserSchema
@@ -18,12 +18,12 @@ from ..utils.commons import save_file
 from ..utils.tokens import confirm_token
 
 
-@app.route('/uploads/<filename>')
+@api.route('/uploads/<filename>')
 def uploaded_file(filename):
     return send_from_directory(MEDIA_ROOT, filename)
 
 
-@app.route('/register/', methods=['POST'])
+@api.route('/register/', methods=['POST'])
 def register():
     try:
         data = dict(request.json or request.form)
@@ -38,7 +38,7 @@ def register():
         return jsonify(err.messages), HTTPStatus.BAD_REQUEST
 
 
-@app.route("/login/", methods=["POST"])
+@api.route("/login/", methods=["POST"])
 def login():
     data = dict(request.json or request.form)
     email = data.get('email')
@@ -59,7 +59,7 @@ def login():
     return jsonify(user), HTTPStatus.OK
 
 
-@app.route("/protected", methods=["GET"])
+@api.route("/protected", methods=["GET"])
 @jwt_required()
 def protected():
     # Access the identity of the current user with get_jwt_identity
@@ -68,7 +68,7 @@ def protected():
     return UserSchema().jsonify(user), HTTPStatus.OK
 
 
-@app.route('/refresh-token/', methods=['POST'])
+@api.route('/refresh-token/', methods=['POST'])
 @jwt_required(refresh=True)
 def refresh():
     user_id = get_jwt_identity()
@@ -78,7 +78,7 @@ def refresh():
     return jsonify(ret), HTTPStatus.OK
 
 
-@app.route('/confirm/<string:token>/')
+@api.route('/confirm/<string:token>/')
 def confirm_email(token):
     email = confirm_token(token)
     if not email:

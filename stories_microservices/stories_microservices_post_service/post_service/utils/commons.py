@@ -1,6 +1,6 @@
 import os
 from datetime import datetime
-from ..config.extentions import MEDIA_ROOT
+from ..config.base import MEDIA_ROOT
 
 
 def save_file(file):

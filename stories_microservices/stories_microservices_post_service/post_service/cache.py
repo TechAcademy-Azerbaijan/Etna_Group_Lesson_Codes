@@ -1,6 +1,6 @@
 import json
 
-from .config.extentions import RedisConfig
+from .config.base import RedisConfig
 
 
 class SaveCache(RedisConfig):

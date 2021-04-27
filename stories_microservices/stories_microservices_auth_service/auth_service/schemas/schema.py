@@ -7,7 +7,7 @@ from ..models import User
 
 class UserSchema(ma.SQLAlchemyAutoSchema):
     image = AbsoluteURLFor(
-        'uploaded_file',
+        'api.uploaded_file',
         filename='<image>'
     )
     password = ma.String(load_only=True, required=True, validate=[validate.Length(min=8, max=20)])
